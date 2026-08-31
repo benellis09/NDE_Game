@@ -55,10 +55,11 @@ def get_ndt_question(topic, world):
     }
 
     try:
-        # 4. Call Groq Cloud API with structured JSON output enforcement
+              # 4. Call Groq Cloud API with structured JSON output enforcement
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",  # <--- Updated to the active production model
             messages=[
+
                 {
                     "role": "system", 
                     "content": f"You are a helpful assistant that outputs database entries strictly matching this JSON schema: {json.dumps(json_schema)}."
