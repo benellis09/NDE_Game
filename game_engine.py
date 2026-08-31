@@ -1,23 +1,19 @@
-import json
-import chromadb
-import ollama
+import os
+from groq import Groq
 
-def get_ndt_question(topic_keyword, world_name):
-    """
-    Queries the local vector database and uses Ollama's Structured Output
-    format to guarantee a perfectly parsed Mario-styled NDT question.
-    """
-    db_folder = "chroma_db"
-    
-    try:
-        chroma_client = chromadb.PersistentClient(path=db_folder)
-        collection = chroma_client.get_collection(name="ndt_level3_knowledge")
-    except Exception as e:
-        return {
-            "error": True,
-            "message": "Could not connect to database. Did you run indexer.py first?"
-        }
-        
+# Initialize the cloud client (it will automatically look for the API key)
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
+def get_ndt_question():
+    # Example generation call
+    completion = client.chat.completions.create(
+        model="llama-3.3-70b-versatile", # A powerful cloud model
+        messages=[
+            {"role": "user", "content": "Generate a game question..."}
+        ]
+    )
+    return completion.choices[0].message.content
+
     # Query database for matching PDF text snippets
     results = collection.query(query_texts=[topic_keyword], n_results=2)
     if results['documents'] and results['documents'][0]:
