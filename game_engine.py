@@ -1,18 +1,29 @@
 import os
-from groq import Groq
+from groq import Groq  # Make sure 'groq' is in your requirements.txt!
 
-# Initialize the cloud client (it will automatically look for the API key)
+# Initialize the cloud client
+# It will look for an environment variable named GROQ_API_KEY
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-def get_ndt_question():
-    # Example generation call
-    completion = client.chat.completions.create(
-        model="llama-3.3-70b-versatile", # A powerful cloud model
-        messages=[
-            {"role": "user", "content": "Generate a game question..."}
-        ]
-    )
-    return completion.choices[0].message.content
+def get_ndt_question(topic, world):
+    # Craft your prompt using the stage_info arguments passed by app.py
+    prompt = f"You are a game master. Generate a question about the topic '{topic}' in the world of '{world}'."
+    
+    try:
+        # Call the cloud model instead of local ollama
+        completion = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7
+        )
+        # Return the generated text string back to app.py
+        return completion.choices.message.content
+        
+    except Exception as e:
+        return f"Error generating question: {str(e)}"
+
 
     # Query database for matching PDF text snippets
     results = collection.query(query_texts=[topic_keyword], n_results=2)
