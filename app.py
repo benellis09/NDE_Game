@@ -38,7 +38,7 @@ if st.session_state.current_question is None and st.session_state.player_pos < T
     load_next_stage_question()
 
 # 3. Render Top Game HUD (Status Dashboard)
-st.title("🍄 Super NDT Level III Challenge")
+st.title("🍄 Cody's Super NDT Level III Challenge")
 
 hud_col1, hud_col2, hud_col3 = st.columns(3)
 with hud_col1:
